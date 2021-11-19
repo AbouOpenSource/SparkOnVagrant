@@ -1,0 +1,52 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# I will use the debian vms for the spark nodes in my archtecture
+#
+#
+#
+Vagrant.configure("2") do |config|
+  config.vm.define "sparkMaster" do |sparkMaster|
+      sparkMaster.vm.box = "debian/buster64"
+      sparkMaster.vm.hostname = "spark-master"
+      sparkMaster.vm.box_url = "debian/buster64"
+      sparkMaster.vm.network :private_network, ip: "192.168.56.15"
+      sparkMaster.vm.provider :virtualbox do |vParam|
+        vParam.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+        vParam.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+        vParam.customize ["modifyvm", :id, "--memory", 1024]
+        vParam.customize ["modifyvm", :id, "--name", "spark-master"]
+        vParam.customize ["modifyvm", :id, "--cpus", "2"]
+        end
+      config.vm.provision "shell", path: "install_master_spark.sh"
+  end
+
+  config.vm.define "sparkWorker-1" do |sparkWorker1|
+      sparkWorker1.vm.box = "debian/buster64"
+      sparkWorker1.vm.hostname = "spark-worker1"
+      sparkWorker1.vm.box_url = "debian/buster64"
+      sparkWorker1.vm.network :private_network, ip: "192.168.56.16"
+      sparkWorker1.vm.provider :virtualbox do |vParam|
+        vParam.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+        vParam.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+        vParam.customize ["modifyvm", :id, "--memory", 1024]
+        vParam.customize ["modifyvm", :id, "--name", "sparkWorker-1"]
+        vParam.customize ["modifyvm", :id, "--cpus", "2"]
+        end
+      config.vm.provision "shell", path: "install_worker_spark.sh"
+  end
+
+  config.vm.define "sparkWorker-2" do |sparkWorker2|
+      sparkWorker2.vm.box = "debian/buster64"
+      sparkWorker2.vm.hostname = "spark-worker2"
+      sparkWorker2.vm.box_url = "debian/buster64"
+      sparkWorker2.vm.network :private_network, ip: "192.168.56.17"
+      sparkWorker2.vm.provider :virtualbox do |vParam|
+        vParam.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+        vParam.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+        vParam.customize ["modifyvm", :id, "--memory", 1024]
+        vParam.customize ["modifyvm", :id, "--name", "sparkWorker-2"]
+        vParam.customize ["modifyvm", :id, "--cpus", "2"]
+        end
+      config.vm.provision "shell", path: "install_worker_spark.sh"
+  end
